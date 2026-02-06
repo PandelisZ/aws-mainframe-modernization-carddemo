@@ -1,0 +1,8 @@
+tr_type,tr_description
+01,Purchase
+02,Payment
+03,Credit
+04,Authorization
+05,Refund
+06,Reversal
+07,Adjustment
