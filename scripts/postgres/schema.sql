@@ -137,3 +137,28 @@ CREATE TABLE card_transaction (
     FOREIGN KEY (card_num)
         REFERENCES card(card_num)
 );
+
+-- ------------------------------------------------------------
+-- Indexes to support common access patterns
+-- ------------------------------------------------------------
+
+-- Look up accounts by group and ZIP (for grouping/batching, reporting)
+CREATE INDEX idx_account_group_id ON account(group_id);
+CREATE INDEX idx_account_addr_zip ON account(addr_zip);
+
+-- Navigate from accounts/customers to cards
+CREATE INDEX idx_card_acct_id ON card(acct_id);
+
+-- Navigate from customers/accounts to cards via xref
+CREATE INDEX idx_card_xref_cust_id ON card_xref(cust_id);
+CREATE INDEX idx_card_xref_acct_id ON card_xref(acct_id);
+
+-- Transaction lookups by card and time
+CREATE INDEX idx_card_transaction_card_num ON card_transaction(card_num);
+CREATE INDEX idx_card_transaction_card_num_orig_ts
+    ON card_transaction(card_num, orig_ts);
+CREATE INDEX idx_card_transaction_orig_ts ON card_transaction(orig_ts);
+
+-- Summaries/grouping by transaction type/category
+CREATE INDEX idx_card_transaction_tran_type_cat
+    ON card_transaction(tran_type_cd, tran_cat_cd);
